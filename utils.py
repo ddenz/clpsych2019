@@ -1,12 +1,19 @@
 import gensim.downloader
+import logging
 import numpy as np
+import os
 import pandas as pd
 import re
 import spacy
 
+from keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelBinarizer
 
 SEED = 7
+UNK = '<UNKNOWN>'
+MAX_LENGTH = 400
+
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -80,6 +87,8 @@ def create_token_index_mappings(texts):
 
 
 def prepare_sequential():
+    logging.info('Preparing sequential data...')
+
     df_train = load_data(dataset_name='train')
     df_test = load_data(dataset_name='test')
 
@@ -89,22 +98,22 @@ def prepare_sequential():
     texts_train = merge_texts(df_train)
     texts_test = merge_texts(df_test)
 
-    # download GloVe embeddings
+    # download GloVe embeddings if not already available
     glove_vectors = gensim.downloader.load('glove-twitter-200')
 
-    token_counts_train, index2token_train, token2index_train = create_token_index_mappings(texts_train)
+    token_counts, index2token, token2index = create_token_index_mappings(texts_train + texts_test)
 
     # create mapping of words to their embeddings
     emb_map = {}
     for w in glove_vectors.vocab:
         emb_map[w] = glove_vectors.get_vector(w)
 
-    vocab_size = len(token_counts_train)
+    vocab_size = len(token_counts)
     embed_len = glove_vectors['help'].shape[0]
     embedding_matrix = np.zeros((vocab_size + 1, embed_len))
 
     # initialize the embedding matrix
-    for word, i in token2index_train.items():
+    for word, i in token2index.items():
         if i >= vocab_size:
             continue
         if word in glove_vectors:
@@ -115,16 +124,19 @@ def prepare_sequential():
     lb = LabelBinarizer()
     lb.fit(df_train.label)
     y_train = lb.transform(df_train.label)
-    x_train = texts_train
+    x_train = [[token2index.get(token, token2index[UNK]) for token in doc] for doc in texts_train]
+    x_train = pad_sequences(x_train, maxlen=MAX_LENGTH, padding='post')
 
     lb.fit(df_test.label)
     y_test = lb.transform(df_test.label)
-    x_test = texts_test
+    x_test = [[token2index.get(token, token2index[UNK]) for token in doc] for doc in texts_test]
+    x_test = pad_sequences(x_test, maxlen=MAX_LENGTH, padding='post')
 
     return x_train, y_train, x_test, y_test, embedding_matrix
 
 
 def spacy_tokenize(doc):
+    logging.info('Preparing sequential data...')
     if isinstance(doc, str):
         doc = nlp(doc)
     tokens = []
