@@ -12,6 +12,8 @@ from utils import prepare_sequential
 
 MAX_LENGTH = 400
 
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
 
 def build_model(n_units=32, fc_dim=32, lr=0.001):
     logging.info('Initializing model...')
