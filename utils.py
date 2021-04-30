@@ -1,7 +1,6 @@
 import gensim.downloader
 import logging
 import numpy as np
-import os
 import pandas as pd
 import re
 import spacy
@@ -12,8 +11,6 @@ from sklearn.preprocessing import LabelBinarizer
 SEED = 7
 UNK = '<UNKNOWN>'
 MAX_LENGTH = 400
-
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 nlp = spacy.load('en_core_web_sm')
 
