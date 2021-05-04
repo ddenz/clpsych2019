@@ -1,6 +1,5 @@
 import logging
 import numpy as np
-import tensorflow as tf
 
 from keras.layers import BatchNormalization, Bidirectional, Dense, Dropout, Embedding, LSTM
 from keras.models import Sequential
@@ -33,8 +32,6 @@ def build_model(n_units=32, fc_dim=32, lr=0.001):
     logging.info(model.summary())
     return model
 
-
-logging.info('Num GPUs Available: ', len(tf.config.list_physical_devices('GPU')))
 
 X_train, y_train, X_test, y_test, embedding_matrix = prepare_sequential()
 
