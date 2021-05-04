@@ -7,6 +7,7 @@ import spacy
 
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelBinarizer
+from tensorflow.keras.utils import Sequence
 
 SEED = 7
 UNK = '<UNKNOWN>'
@@ -15,6 +16,33 @@ MAX_LENGTH = 400
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 nlp = spacy.load('en_core_web_sm')
+
+
+class DatasetGenerator(Sequence):
+    def __init__(self, x_set, y_set, batch_size=4):
+        self.x, self.y = x_set, y_set
+
+        self.batch_size = batch_size
+        self.indices = np.arange(len(self.x))
+
+    def __len__(self):
+        return int(np.ceil(len(self.x) / self.batch_size))
+
+    def __getitem__(self, idx):
+        inds = self.indices[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_x = self.x[inds]
+        batch_y = self.y[inds]
+        return np.array(batch_x), np.array(batch_y)
+
+    def on_epoch_end(self):
+        np.random.shuffle(self.indices)
+
+
+def prepare_dataset(dataset_name='train'):
+    """
+    Save the data points into individual files.
+    :return:
+    """
 
 
 def load_data(dataset_name='train'):
