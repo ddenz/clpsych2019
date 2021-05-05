@@ -70,7 +70,7 @@ def load_data(dataset_name='train', reload=False):
         df.post_title.fillna(value='', inplace=True)
         df.post_body.fillna(value='', inplace=True)
     else:
-        df = pd.read_csv('umd_reddit_suicidewatch_dataset_v2/crowd/' + dataset_name + '/task_A_' + dataset_name + '.csv')
+        df = pd.read_csv('umd_reddit_suicidewatch_dataset_v2/crowd/' + dataset_name + '/task_A_' + dataset_name + '.csv', keep_default_na=False)
 
     return df
 
@@ -89,6 +89,7 @@ def merge_texts(df):
 
 
 def create_token_index_mappings(texts):
+    logging.info('Creating token-index mappings...')
     # create mappings of words to indices and indices to words
     UNK = '<UNKNOWN>'
     # PAD = '<PAD>'
@@ -123,6 +124,7 @@ def prepare_sequential():
     texts_test = merge_texts(df_test)
 
     # download GloVe embeddings if not already available
+    logging.info('Downloading GloVe embeddings...')
     glove_vectors = gensim.downloader.load('glove-twitter-200')
 
     token_counts, index2token, token2index = create_token_index_mappings(texts_train + texts_test)
@@ -137,6 +139,7 @@ def prepare_sequential():
     embedding_matrix = np.zeros((vocab_size + 1, embed_len))
 
     # initialize the embedding matrix
+    logging.info('Initializing embeddings matrix...')
     for word, i in token2index.items():
         if i >= vocab_size:
             continue
@@ -145,12 +148,14 @@ def prepare_sequential():
             # words not found in embedding index will be all-zeros.
             embedding_matrix[i] = embedding_vector
 
+    logging.info('Preparing train data...')
     lb = LabelBinarizer()
     lb.fit(df_train.label)
     y_train = lb.transform(df_train.label)
     x_train = [[token2index.get(token, token2index[UNK]) for token in doc] for doc in texts_train]
     x_train = pad_sequences(x_train, maxlen=MAX_LENGTH, padding='post')
 
+    logging.info('Preparing test data...')
     lb.fit(df_test.label)
     y_test = lb.transform(df_test.label)
     x_test = [[token2index.get(token, token2index[UNK]) for token in doc] for doc in texts_test]
