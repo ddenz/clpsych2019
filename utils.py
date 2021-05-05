@@ -50,6 +50,8 @@ def load_data(dataset_name='train', reload=False):
         (d) Severe Risk: I believe this person is at high risk of attempting suicide in the near future.
         None: controls, which are not assigned a value for this variable.
     """
+    logging.info('Loading dataset: ' + dataset_name)
+
     df_posts = pd.DataFrame()
     df_labels = pd.DataFrame()
     df_users = pd.DataFrame()
