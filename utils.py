@@ -167,7 +167,6 @@ def prepare_sequential():
 
 
 def spacy_tokenize(doc):
-    logging.info('Preparing sequential data...')
     if isinstance(doc, str):
         doc = nlp(doc)
     tokens = []
@@ -193,7 +192,3 @@ def spacy_tokenize(doc):
             form = re.sub('^([^\.]+)\.', '\g<1>', form)
             tokens.append(form)
     return tokens
-
-
-
-
