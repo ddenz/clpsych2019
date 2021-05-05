@@ -44,3 +44,5 @@ if __name__ == '__main__':
     y_test_m = [np.argmax(y) for y in y_test]
 
     print(classification_report(y_test_m, y_pred_m))
+
+    print(set(y_pred_m))
