@@ -39,6 +39,7 @@ class DatasetGenerator(Sequence):
         np.random.shuffle(self.indices)
 
 
+@profile
 def load_data(dataset_name='train', reload=False):
     """
     Load data for the selected dataset.
@@ -77,6 +78,7 @@ def load_data(dataset_name='train', reload=False):
     return df
 
 
+@profile
 def merge_texts(df):
     # merge titles and bodies into a single document for each post
     post_titles = []
@@ -90,6 +92,7 @@ def merge_texts(df):
     return [title + body for (title, body) in zip(post_titles, post_bodies)]
 
 
+@profile
 def create_token_index_mappings(texts):
     logging.info('Creating token-index mappings...')
     # create mappings of words to indices and indices to words
@@ -113,6 +116,7 @@ def create_token_index_mappings(texts):
     return token_counts, index2token, token2index
 
 
+@profile
 def prepare_sequential():
     logging.info('Preparing sequential data...')
 
@@ -166,6 +170,7 @@ def prepare_sequential():
     return x_train, y_train, x_test, y_test, embedding_matrix
 
 
+@profile
 def spacy_tokenize(doc):
     if isinstance(doc, str):
         doc = nlp(doc)
