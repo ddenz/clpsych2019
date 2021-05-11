@@ -1,11 +1,12 @@
 import logging
 import numpy as np
+import time
 
 from keras.layers import BatchNormalization, Bidirectional, Dense, Dropout, Embedding, LSTM
 from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasClassifier
-
+from memory_profiler import profile
 from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 from utils import prepare_sequential
@@ -35,6 +36,7 @@ def build_model(n_units=32, fc_dim=32, lr=0.001):
 
 
 if __name__ == '__main__':
+    t0 = time.time()
     X_train, y_train, X_test, y_test, embedding_matrix = prepare_sequential()
 
     model = KerasClassifier(build_fn=build_model, n_units=64, fc_dim=256, lr=0.00001, verbose=1)
@@ -47,3 +49,5 @@ if __name__ == '__main__':
     print(classification_report(y_test_m, y_pred_m))
 
     print(set(y_pred_m))
+
+    print('Time: %s seconds' % (time.time() - t0))

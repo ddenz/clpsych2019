@@ -6,6 +6,7 @@ import re
 import spacy
 
 from keras.preprocessing.sequence import pad_sequences
+from memory_profiler import profile
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.utils import Sequence
 
