@@ -6,7 +6,6 @@ import re
 import spacy
 
 from keras.preprocessing.sequence import pad_sequences
-from memory_profiler import profile
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.utils import Sequence
 
@@ -114,7 +113,13 @@ def create_token_index_mappings(texts):
     return token_counts, index2token, token2index
 
 
-def prepare_sequential():
+def load_embeddings(emb_name):
+    # download embeddings if not already available
+    logging.info('Downloading embeddings:', emb_name)
+    return gensim.downloader.load(emb_name)
+
+
+def prepare_sequential(merge=False, emb_name='glove-twitter-200'):
     logging.info('Preparing sequential data...')
 
     df_train = load_data(dataset_name='train')
@@ -123,22 +128,29 @@ def prepare_sequential():
     df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
     df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
 
-    texts_train = merge_texts(df_train)
-    texts_test = merge_texts(df_test)
+    if merge:
+        texts_train = merge_texts(df_train)
+        texts_test = merge_texts(df_test)
+    else:
+        texts_train = []
+        for doc in nlp.pipe(df_train.post_body):
+            texts_train.append(spacy_tokenize(doc))
 
-    # download GloVe embeddings if not already available
-    logging.info('Downloading GloVe embeddings...')
-    glove_vectors = gensim.downloader.load('glove-twitter-200')
+        texts_test = []
+        for doc in nlp.pipe(df_test.post_body):
+            texts_test.append(spacy_tokenize(doc))
+
+    embedding_vectors = load_embeddings(emb_name)
 
     token_counts, index2token, token2index = create_token_index_mappings(texts_train + texts_test)
 
     # create mapping of words to their embeddings
     emb_map = {}
-    for w in glove_vectors.vocab:
-        emb_map[w] = glove_vectors.get_vector(w)
+    for w in embedding_vectors.vocab:
+        emb_map[w] = embedding_vectors.get_vector(w)
 
     vocab_size = len(token_counts)
-    embed_len = glove_vectors['help'].shape[0]
+    embed_len = embedding_vectors['help'].shape[0]
     embedding_matrix = np.zeros((vocab_size + 1, embed_len))
 
     # initialize the embedding matrix
@@ -146,8 +158,8 @@ def prepare_sequential():
     for word, i in token2index.items():
         if i >= vocab_size:
             continue
-        if word in glove_vectors:
-            embedding_vector = glove_vectors.get_vector(word)
+        if word in embedding_vectors:
+            embedding_vector = embedding_vectors.get_vector(word)
             # words not found in embedding index will be all-zeros.
             embedding_matrix[i] = embedding_vector
 

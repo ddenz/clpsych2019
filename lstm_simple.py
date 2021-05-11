@@ -37,7 +37,7 @@ def build_model(n_units=32, fc_dim=32, lr=0.001):
 
 if __name__ == '__main__':
     t0 = time.time()
-    X_train, y_train, X_test, y_test, embedding_matrix = prepare_sequential()
+    X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=True)
 
     model = KerasClassifier(build_fn=build_model, n_units=64, fc_dim=256, lr=0.00001, verbose=1)
     history = model.fit(X_train, y_train, batch_size=32, epochs=20)
