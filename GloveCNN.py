@@ -1,5 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D
+from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasClassifier
 from utils import prepare_sequential, MAX_LENGTH
 from simple_elmo import ElmoModel
@@ -11,7 +12,7 @@ class GloveCNN(Sequential):
         self.emb_matrix = emb_matrix
         self.emb_len = emb_len
 
-    def build_model(self, lr=0.001, optimizer='adam', loss='categorical_crossentropy'):
+    def build_model_(self, lr=0.001, optimizer='adam', loss='categorical_crossentropy'):
         self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
                            weights=[self.emb_matrix], trainable=False))
         self.add(Conv1D(64, 7, activation='relu', padding='same'))
@@ -25,6 +26,17 @@ class GloveCNN(Sequential):
         self.add(Dropout(0.5))
         self.add(Dense(4, activation='softmax'))
         self.compile(loss=loss, optimizer=optimizer, lr=lr, metrics=['accuracy'])
+        self.summary()
+
+    def build_model(self, optimizer=Adam(lr=0.001), loss='categorical_crossentropy'):
+        self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
+                           weights=[self.emb_matrix], trainable=False))
+        self.add(Conv1D(2, 300, activation='relu', padding='same'))
+        self.add(MaxPooling1D())
+        self.add(Flatten())
+        self.add(Dropout(0.5))
+        self.add(Dense(4, activation='softmax'))
+        self.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
         self.summary()
 
 

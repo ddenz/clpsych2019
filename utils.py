@@ -6,6 +6,7 @@ import re
 import spacy
 
 from keras.preprocessing.sequence import pad_sequences
+from simple_elmo import ElmoModel
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.utils import Sequence
 
@@ -177,6 +178,39 @@ def prepare_sequential(merge=False, emb_name='glove-twitter-200'):
     x_test = pad_sequences(x_test, maxlen=MAX_LENGTH, padding='post')
 
     return x_train, y_train, x_test, y_test, embedding_matrix
+
+
+def prepare_elmo():
+    elmo_model = ElmoModel()
+    elmo_model.load('embeddings/193.zip')
+
+    df_train = load_data(dataset_name='train')
+    df_test = load_data(dataset_name='test')
+
+    df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
+    df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
+
+    texts_train = []
+    for doc in nlp.pipe(df_train.post_body):
+        texts_train.append([spacy_tokenize(sent) for sent in doc.sents])
+
+    texts_test = []
+    for doc in nlp.pipe(df_test.post_body):
+        texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
+
+    x_train = elmo_model.get_elmo_vectors(texts_train)
+    x_test = elmo_model.get_elmo_vectors(texts_test)
+
+    logging.info('Preparing train data...')
+    lb = LabelBinarizer()
+    lb.fit(df_train.label)
+    y_train = lb.transform(df_train.label)
+
+    logging.info('Preparing test data...')
+    lb.fit(df_test.label)
+    y_test = lb.transform(df_test.label)
+
+    return x_train, y_train, x_test, y_test
 
 
 def spacy_tokenize(doc):
