@@ -115,7 +115,7 @@ def create_token_index_mappings(texts):
 
 def load_embeddings(emb_name):
     # download embeddings if not already available
-    logging.info('Downloading embeddings:', emb_name)
+    logging.info('Downloading embeddings: ' + emb_name)
     return gensim.downloader.load(emb_name)
 
 
