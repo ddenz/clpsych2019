@@ -24,7 +24,7 @@ class GloveCNN(Sequential):
         self.add(Dense(64, activation='relu'))
         self.add(Dropout(0.5))
         self.add(Dense(4, activation='softmax'))
-        self.compile(loss=self.loss, optimizer=self.optimizer, lr=lr, metrics=['accuracy'])
+        self.compile(loss=loss, optimizer=optimizer, lr=lr, metrics=['accuracy'])
         self.summary()
 
 
@@ -33,4 +33,4 @@ if __name__ == '__main__':
 
     glove_cnn = GloveCNN(emb_matrix, emb_matrix[0].shape[0])
     glove_cnn.build_model()
-    glove_cnn.fit()
+    history = glove_cnn.fit()
