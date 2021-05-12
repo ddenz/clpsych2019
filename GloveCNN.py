@@ -6,7 +6,7 @@ from simple_elmo import ElmoModel
 
 
 class GloveCNN(Sequential):
-    def __init__(self, emb_matrix, emb_len, optimizer, loss):
+    def __init__(self, emb_matrix, emb_len):
         super().__init__()
         self.emb_matrix = emb_matrix
         self.emb_len = emb_len
