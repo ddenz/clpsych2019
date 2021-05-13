@@ -192,11 +192,13 @@ def prepare_elmo():
 
     texts_train = []
     for doc in nlp.pipe(df_train.post_body):
-        texts_train.append([spacy_tokenize(sent) for sent in doc.sents])
+        #texts_train.append([spacy_tokenize(doc) for sent in doc.sents])
+        texts_train.append(spacy_tokenize(doc))
 
     texts_test = []
     for doc in nlp.pipe(df_test.post_body):
-        texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
+        #texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
+        texts_test.append(spacy_tokenize(doc))
 
     x_train = elmo_model.get_elmo_vectors(texts_train)
     x_test = elmo_model.get_elmo_vectors(texts_test)
