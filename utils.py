@@ -184,8 +184,8 @@ def prepare_elmo():
     elmo_model = ElmoModel()
     elmo_model.load('embeddings/193.zip')
 
-    df_train = load_data(dataset_name='train')
-    df_test = load_data(dataset_name='test')
+    df_train = load_data(dataset_name='train')[0:10]
+    df_test = load_data(dataset_name='test')[0:10]
 
     df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
     df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
@@ -200,8 +200,14 @@ def prepare_elmo():
         #texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
         texts_test.append(spacy_tokenize(doc))
 
+    print('x_train:' + str(texts_train))
+    print('x_test :' + str(texts_test))
+
     x_train = elmo_model.get_elmo_vectors(texts_train)
     x_test = elmo_model.get_elmo_vectors(texts_test)
+
+    print('x_train.shape:' + str(x_train.shape))
+    print('x_test.shape :' + str(x_test.shape))
 
     logging.info('Preparing train data...')
     lb = LabelBinarizer()
