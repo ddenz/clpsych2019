@@ -22,5 +22,5 @@ if __name__ == '__main__':
 
     elmo_cnn = ElmoCNN()
     elmo_cnn.build_model()
-    history = elmo_cnn.fit(X_train, y_train)
+    history = elmo_cnn.fit(X_train, y_train, epochs=10)
     elmo_cnn.summary()

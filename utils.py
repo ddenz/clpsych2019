@@ -203,8 +203,8 @@ def prepare_elmo():
     print('x_train:' + str(texts_train))
     print('x_test :' + str(texts_test))
 
-    x_train = elmo_model.get_elmo_vectors(texts_train)
-    x_test = elmo_model.get_elmo_vectors(texts_test)
+    x_train = elmo_model.get_elmo_vector_average(texts_train)
+    x_test = elmo_model.get_elmo_vector_average(texts_test)
 
     print('x_train.shape:' + str(x_train.shape))
     print('x_test.shape :' + str(x_test.shape))
