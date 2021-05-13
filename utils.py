@@ -184,8 +184,8 @@ def prepare_elmo():
     elmo_model = ElmoModel()
     elmo_model.load('embeddings/193.zip')
 
-    df_train = load_data(dataset_name='train')[0:10]
-    df_test = load_data(dataset_name='test')[0:10]
+    df_train = load_data(dataset_name='train')[0:50]
+    df_test = load_data(dataset_name='test')[0:50]
 
     df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
     df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
@@ -211,11 +211,11 @@ def prepare_elmo():
 
     logging.info('Preparing train data...')
     lb = LabelBinarizer()
-    lb.fit(df_train[0:10].label)
+    lb.fit(df_train.label)
     y_train = lb.transform(df_train.label)
 
     logging.info('Preparing test data...')
-    lb.fit(df_test[0:10].label)
+    lb.fit(df_test.label)
     y_test = lb.transform(df_test.label)
 
     return x_train, y_train, x_test, y_test
