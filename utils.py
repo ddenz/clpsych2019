@@ -2,6 +2,7 @@ import gensim.downloader
 import logging
 import numpy as np
 import pandas as pd
+import pickle
 import re
 import spacy
 
@@ -121,7 +122,7 @@ def load_embeddings(emb_name):
 
 
 def prepare_sequential(merge=False, emb_name='glove-twitter-200'):
-    logging.info('Preparing sequential data...')
+    logging.info('Preparing sequential data (' + emb_name + ')...')
 
     df_train = load_data(dataset_name='train')
     df_test = load_data(dataset_name='test')
@@ -180,7 +181,17 @@ def prepare_sequential(merge=False, emb_name='glove-twitter-200'):
     return x_train, y_train, x_test, y_test, embedding_matrix
 
 
-def prepare_elmo():
+def prepare_elmo(load_from_file=False):
+    logging.info('Preparing sequential data (Elmo)...')
+
+    if load_from_file:
+        logging.info('Loading from file...')
+        x_train = pickle.load(open('embeddings/X_train_elmo.pickle', 'rb'))
+        y_train = pickle.load(open('embeddings/y_train_elmo.pickle', 'rb'))
+        x_test = pickle.load(open('embeddings/X_test_elmo.pickle', 'rb'))
+        y_test = pickle.load(open('embeddings/y_test_elmo.pickle', 'rb'))
+        return x_train, y_train, x_test, y_test
+
     elmo_model = ElmoModel()
     elmo_model.load('embeddings/193.zip')
 
@@ -190,23 +201,25 @@ def prepare_elmo():
     df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
     df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
 
-    x_train = []
+    #x_train = []
+    texts_train = []
     for doc in nlp.pipe(df_train.post_body):
         #texts_train.append([spacy_tokenize(doc) for sent in doc.sents])
-        #texts_train.append(spacy_tokenize(doc))
-        x_train.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
+        texts_train.append(spacy_tokenize(doc))
+        #x_train.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
 
-    x_test = []
+    #x_test = []
+    texts_test = []
     for doc in nlp.pipe(df_test.post_body):
         #texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
-        #texts_test.append(spacy_tokenize(doc))
-        x_test.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
+        texts_test.append(spacy_tokenize(doc))
+        #x_test.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
 
     #print('x_train:' + str(texts_train))
     #print('x_test :' + str(texts_test))
 
-    #x_train = elmo_model.get_elmo_vector_average(texts_train)
-    #x_test = elmo_model.get_elmo_vector_average(texts_test)
+    x_train = elmo_model.get_elmo_vector_average(texts_train)
+    x_test = elmo_model.get_elmo_vector_average(texts_test)
 
     #print('x_train.shape:' + str(x_train.shape))
     #print('x_test.shape :' + str(x_test.shape))
@@ -219,6 +232,12 @@ def prepare_elmo():
     logging.info('Preparing test data...')
     lb.fit(df_test.label)
     y_test = lb.transform(df_test.label)
+
+    logging.info('Saving data to files...')
+    pickle.dump(x_train, open('embeddings/X_train_elmo.pickle', 'wb'))
+    pickle.dump(y_train, open('embeddings/y_train_elmo.pickle', 'wb'))
+    pickle.dump(x_test, open('embeddings/X_test_elmo.pickle', 'wb'))
+    pickle.dump(y_test, open('embeddings/y_test_elmo.pickle', 'wb'))
 
     return x_train, y_train, x_test, y_test
 
