@@ -184,8 +184,8 @@ def prepare_elmo():
     elmo_model = ElmoModel()
     elmo_model.load('embeddings/193.zip')
 
-    df_train = load_data(dataset_name='train')[0:50]
-    df_test = load_data(dataset_name='test')[0:50]
+    df_train = load_data(dataset_name='train')
+    df_test = load_data(dataset_name='test')
 
     df_train = df_train[['user_id', 'post_title', 'post_body', 'label']]
     df_test = df_test[['user_id', 'post_title', 'post_body', 'label']]
