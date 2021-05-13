@@ -211,11 +211,11 @@ def prepare_elmo():
 
     logging.info('Preparing train data...')
     lb = LabelBinarizer()
-    lb.fit(df_train.label)
+    lb.fit(df_train[0:10].label)
     y_train = lb.transform(df_train.label)
 
     logging.info('Preparing test data...')
-    lb.fit(df_test.label)
+    lb.fit(df_test[0:10].label)
     y_test = lb.transform(df_test.label)
 
     return x_train, y_train, x_test, y_test
