@@ -18,7 +18,7 @@ class ElmoCNN(Sequential):
 
 
 if __name__ == '__main__':
-    X_train, y_train, X_test, y_test = prepare_elmo()
+    X_train, y_train, X_test, y_test = prepare_elmo(load_from_file=False)
 
     elmo_cnn = ElmoCNN()
     elmo_cnn.build_model()
