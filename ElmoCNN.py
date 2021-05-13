@@ -15,7 +15,7 @@ class ElmoCNN(Sequential):
         self.add(Dropout(0.5))
         self.add(Dense(4, activation='softmax'))
         self.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
-        self.summary()
+        #self.summary()
 
 
 if __name__ == '__main__':
@@ -23,4 +23,4 @@ if __name__ == '__main__':
 
     elmo_cnn = ElmoCNN()
     elmo_cnn.build_model()
-    history = elmo_cnn.fit()
+    history = elmo_cnn.fit(X_train, y_train)
