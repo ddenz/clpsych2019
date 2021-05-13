@@ -215,14 +215,14 @@ def prepare_elmo(load_from_file=False):
         texts_test.append(spacy_tokenize(doc))
         #x_test.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
 
-    #print('x_train:' + str(texts_train))
-    #print('x_test :' + str(texts_test))
+    print('x_train:' + str(texts_train))
+    print('x_test :' + str(texts_test))
 
     x_train = elmo_model.get_elmo_vector_average(texts_train)
     x_test = elmo_model.get_elmo_vector_average(texts_test)
 
-    #print('x_train.shape:' + str(x_train.shape))
-    #print('x_test.shape :' + str(x_test.shape))
+    print('x_train.shape:' + str(x_train.shape))
+    print('x_test.shape :' + str(x_test.shape))
 
     logging.info('Preparing train data...')
     lb = LabelBinarizer()
