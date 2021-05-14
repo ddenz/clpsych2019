@@ -204,15 +204,15 @@ def prepare_elmo(load_from_file=False):
     #x_train = []
     texts_train = []
     for doc in nlp.pipe(df_train.post_body):
-        texts_train.append([spacy_tokenize(doc) for sent in doc.sents])
-        #texts_train.append(spacy_tokenize(doc))
+        #texts_train.append([spacy_tokenize(doc) for sent in doc.sents])
+        texts_train.append(spacy_tokenize(doc))
         #x_train.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
 
     #x_test = []
     texts_test = []
     for doc in nlp.pipe(df_test.post_body):
-        texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
-        #texts_test.append(spacy_tokenize(doc))
+        #texts_test.append([spacy_tokenize(sent) for sent in doc.sents])
+        texts_test.append(spacy_tokenize(doc))
         #x_test.append(elmo_model.get_elmo_vector_average(spacy_tokenize(doc)))
 
     #print('x_train:' + str(texts_train))
