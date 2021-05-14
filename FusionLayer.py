@@ -1,8 +1,10 @@
 import ElmoCNN
 import GloveCNN
 
-class FusionLayer():
 
+class FusionLayer():
+    pass
 
 
 if __name__ == '__main__':
+    pass
