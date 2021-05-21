@@ -193,7 +193,7 @@ def prepare_elmo(load_from_file=False):
         return x_train, y_train, x_test, y_test
 
     elmo_model = ElmoModel()
-    elmo_model.load('embeddings/193.zip')
+    elmo_model.load('embeddings/193.zip', max_batch_size=64)
 
     df_train = load_data(dataset_name='train')
     df_test = load_data(dataset_name='test')
