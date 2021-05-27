@@ -49,7 +49,7 @@ class GloveBiRNN(Sequential):
     def build_model(self, optimizer=Adam(lr=0.001), loss='categorical_crossentropy'):
         self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
                            weights=[self.emb_matrix], trainable=False))
-        self.add(Reshape((None, self.emb_matrix.shape[0], self.emb_matrix.shape[1])))
+        self.add(Reshape(target_shape=(1,)))
         self.add(Bidirectional(SimpleRNN(64)))
         self.add(Dropout(0.5))
         self.add(Bidirectional(SimpleRNN(64)))
