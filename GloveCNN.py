@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D
+from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional
 from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasClassifier
 from utils import prepare_sequential, MAX_LENGTH
@@ -40,9 +40,33 @@ class GloveCNN(Sequential):
         self.summary()
 
 
+class GloveBiRNN(Sequential):
+    def __init__(self, emb_matrix, emb_len):
+        super().__init__()
+        self.emb_matrix = emb_matrix
+        self.emb_len = emb_len
+
+    def build_model(self, optimizer=Adam(lr=0.001), loss='categorical_crossentropy'):
+        self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
+                           weights=[self.emb_matrix], trainable=False))
+        self.add(Bidirectional(SimpleRNN(64)))
+        self.add(MaxPooling1D())
+        self.add(Dropout(0.5))
+        self.add(Bidirectional(SimpleRNN(64)))
+        self.add(MaxPooling1D())
+        self.add(Dropout(0.5))
+        self.add(Dense(4, activation='softmax'))
+        self.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
+        self.summary()
+
+
 if __name__ == '__main__':
     X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=False, emb_name='glove-wiki-gigaword-300')
 
-    glove_cnn = GloveCNN(emb_matrix, emb_matrix[0].shape[0])
-    glove_cnn.build_model()
-    history = glove_cnn.fit()
+    #glove_cnn = GloveCNN(emb_matrix, emb_matrix[0].shape[0])
+    #glove_cnn.build_model()
+    #history = glove_cnn.fit()
+
+    glove_rnn = GloveBiRNN(emb_matrix, emb_matrix[0].shape[0])
+    glove_rnn.build_model()
+    history = glove_rnn.fit()
