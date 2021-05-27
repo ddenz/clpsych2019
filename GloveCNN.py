@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional
+from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional, MaxPooling2D
 from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasClassifier
 from utils import prepare_sequential, MAX_LENGTH
@@ -50,8 +50,10 @@ class GloveBiRNN(Sequential):
         self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
                            weights=[self.emb_matrix], trainable=False))
         self.add(Bidirectional(SimpleRNN(64)))
+        self.add(MaxPooling2D())
         self.add(Dropout(0.5))
         self.add(Bidirectional(SimpleRNN(64)))
+        self.add(MaxPooling2D())
         self.add(Dropout(0.5))
         self.add(Dense(4, activation='softmax'))
         self.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
