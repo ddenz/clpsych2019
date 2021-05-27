@@ -47,7 +47,7 @@ class GloveBiRNN(Sequential):
     def build_model(self, optimizer=Adam(lr=0.001), loss='categorical_crossentropy'):
         self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_matrix[0].shape[0],
                            input_length=MAX_LENGTH, weights=[self.emb_matrix], trainable=False))
-        self.add(Bidirectional(SimpleRNN(64)))
+        self.add(Bidirectional(SimpleRNN(64, return_sequences=True, return_state=True)))
         self.add(Dropout(0.5))
         self.add(Bidirectional(SimpleRNN(64)))
         self.add(Dropout(0.5))
@@ -57,12 +57,14 @@ class GloveBiRNN(Sequential):
 
 
 if __name__ == '__main__':
-    X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=False, emb_name='glove-wiki-gigaword-300')
+    #X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=False, emb_name='glove-wiki-gigaword-300')
 
     #glove_cnn = GloveCNN(emb_matrix)
     #glove_cnn.build_model()
     #history = glove_cnn.fit(X_train, y_train, batch_size=32, epochs=20)
 
+    X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=True)
+    print('shape=', emb_matrix.shape)
     glove_rnn = GloveBiRNN(emb_matrix)
     glove_rnn.build_model()
     history = glove_rnn.fit(X_train, y_train, batch_size=32, epochs=20)
