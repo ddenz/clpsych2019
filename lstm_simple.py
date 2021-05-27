@@ -17,7 +17,7 @@ MAX_LENGTH = 400
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 
-def build_model(n_units=32, fc_dim=32, lr=0.001):
+def build_model(embedding_matrix=None, n_units=32, fc_dim=32, lr=0.001):
     logging.info('Initializing model...')
     model = Sequential()
     embedding_layer = Embedding(input_dim=embedding_matrix.shape[0], output_dim=embedding_matrix[0].shape[0],
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     t0 = time.time()
     X_train, y_train, X_test, y_test, emb_matrix = prepare_sequential(merge=True)
 
-    model = KerasClassifier(build_fn=build_model, n_units=64, fc_dim=256, lr=0.00001, verbose=1)
+    model = KerasClassifier(build_fn=build_model, embedding_matrix=emb_matrix, n_units=64, fc_dim=256, lr=0.00001, verbose=1)
     history = model.fit(X_train, y_train, batch_size=32, epochs=20)
     y_pred = model.predict(X_test)
 
