@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional, MaxPooling2D, Reshape
+from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional, Reshape
 from keras.optimizers import Adam
 from keras.wrappers.scikit_learn import KerasClassifier
 from utils import prepare_sequential, MAX_LENGTH
@@ -49,7 +49,7 @@ class GloveBiRNN(Sequential):
     def build_model(self, optimizer=Adam(lr=0.001), loss='categorical_crossentropy'):
         self.add(Embedding(input_dim=self.emb_matrix.shape[0], output_dim=self.emb_len, input_length=MAX_LENGTH,
                            weights=[self.emb_matrix], trainable=False))
-        self.add(Reshape(target_shape=(1,)))
+        self.add(Reshape(target_shape=(self.emb_matrix.shape[0], 1, self.emb_matrix.shape[1])))
         self.add(Bidirectional(SimpleRNN(64)))
         self.add(Dropout(0.5))
         self.add(Bidirectional(SimpleRNN(64)))
@@ -64,8 +64,8 @@ if __name__ == '__main__':
 
     #glove_cnn = GloveCNN(emb_matrix, emb_matrix[0].shape[0])
     #glove_cnn.build_model()
-    #history = glove_cnn.fit()
+    #history = glove_cnn.fit(X_train, y_train, batch_size=32, epochs=20)
 
     glove_rnn = GloveBiRNN(emb_matrix, emb_matrix[0].shape[0])
     glove_rnn.build_model()
-    history = glove_rnn.fit()
+    history = glove_rnn.fit(X_train, y_train, batch_size=32, epochs=20)
