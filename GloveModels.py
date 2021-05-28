@@ -1,9 +1,7 @@
 from keras.models import Sequential
 from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, SimpleRNN, Bidirectional, GRU, LSTM
 from keras.optimizers import Adam
-from keras.wrappers.scikit_learn import KerasClassifier
 from utils import prepare_sequential, MAX_LENGTH
-from simple_elmo import ElmoModel
 
 
 class GloveCNN(Sequential):
