@@ -16,9 +16,9 @@ if __name__ == '__main__':
     print('input_dim=', emb_matrix.shape[0])
     print('output_dim=', emb_matrix[0].shape[0])
 
-    inputs = Input(shape=emb_matrix.shape, name='inputs')
+    inputs = Input(shape=(emb_matrix.shape[0]))
     e = Embedding(input_dim=emb_matrix.shape[0], output_dim=emb_matrix[0].shape[0], input_length=MAX_LENGTH,
-                  weights=[emb_matrix], trainable=False, name='embedding')(inputs)
+                  weights=[emb_matrix], trainable=False)(inputs)
 
     # GloveCNN
     gcnn_c1 = Conv1D(2, 300, activation='relu', padding='same')(e)
