@@ -25,10 +25,10 @@ if __name__ == '__main__':
     gcnn_mp1 = MaxPooling1D()(gcnn_c1)
     gcnn_f1 = Flatten()(gcnn_mp1)
     gcnn_do1 = Dropout(0.5)(gcnn_f1)
-    gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
-    gcnn_mp = MaxPooling1D()(gcnn_d1)
-    gcnn_ap = AveragePooling1D()(gcnn_d1)
-    gcnn_att = Attention(gcnn_d1)
+    # gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
+    gcnn_mp = MaxPooling1D()(gcnn_do1)
+    gcnn_ap = AveragePooling1D()(gcnn_do1)
+    gcnn_att = Attention(gcnn_do1)
     gcnn_out = concatenate([gcnn_mp, gcnn_ap, gcnn_att])
 
     # GloveBiRNN
@@ -36,10 +36,10 @@ if __name__ == '__main__':
     grnn_do1 = Dropout(0.5)(grnn_r1)
     grnn_r2 = Bidirectional(SimpleRNN(64, return_sequences=True))(grnn_do1)
     grnn_do2 = Dropout(0.5)(grnn_r2)
-    grnn_d1 = Dense(4, activation='softmax')(grnn_do2)
-    grnn_mp = MaxPooling1D()(grnn_d1)
-    grnn_ap = AveragePooling1D()(grnn_d1)
-    grnn_att = Attention(grnn_d1)
+    #grnn_d1 = Dense(4, activation='softmax')(grnn_do2)
+    grnn_mp = MaxPooling1D()(grnn_do2)
+    grnn_ap = AveragePooling1D()(grnn_do2)
+    grnn_att = Attention(grnn_do2)
     grnn_out = concatenate([grnn_mp, grnn_ap, grnn_att])
 
     # GloveGRU
@@ -47,10 +47,10 @@ if __name__ == '__main__':
     ggru_do1 = Dropout(0.5)(ggru_r1)
     ggru_r2 = GRU(64, return_sequences=False)(ggru_do1)
     ggru_do2 = Dropout(0.5)(ggru_r2)
-    ggru_d1 = Dense(4, activation='softmax')(ggru_do2)
-    ggru_mp = MaxPooling1D()(ggru_d1)
-    ggru_ap = AveragePooling1D()(ggru_d1)
-    ggru_att = Attention(ggru_d1)
+    #ggru_d1 = Dense(4, activation='softmax')(ggru_do2)
+    ggru_mp = MaxPooling1D()(ggru_do2)
+    ggru_ap = AveragePooling1D()(ggru_do2)
+    ggru_att = Attention(ggru_do2)
     ggru_out = concatenate([ggru_mp, ggru_ap, ggru_att])
 
     # GloveBiLSTM
@@ -60,10 +60,10 @@ if __name__ == '__main__':
     glstm_r2 = Bidirectional(LSTM(32, activation='sigmoid', recurrent_dropout=0.2, recurrent_activation='sigmoid',
                                   return_sequences=False))(glstm_do1)
     glstm_do2 = Dropout(0.5)(glstm_r2)
-    glstm_d1 = Dense(4, activation='softmax')(glstm_do2)
-    glstm_mp = MaxPooling1D()(glstm_d1)
-    glstm_ap = AveragePooling1D()(glstm_d1)
-    glstm_att = Attention(glstm_d1)
+    #glstm_d1 = Dense(4, activation='softmax')(glstm_do2)
+    glstm_mp = MaxPooling1D()(glstm_do2)
+    glstm_ap = AveragePooling1D()(glstm_do2)
+    glstm_att = Attention(glstm_do2)
     glstm_out = concatenate([grnn_mp, grnn_ap, grnn_att])
 
     x = concatenate([])
