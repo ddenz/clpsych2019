@@ -16,19 +16,19 @@ if __name__ == '__main__':
     print('input_dim=', emb_matrix.shape[0])
     print('output_dim=', emb_matrix[0].shape[0])
 
-    inputs = Input(shape=(emb_matrix.shape[0]))
+    inputs = Input(shape=emb_matrix.shape, name='inputs')
     e = Embedding(input_dim=emb_matrix.shape[0], output_dim=emb_matrix[0].shape[0], input_length=MAX_LENGTH,
-                  weights=[emb_matrix], trainable=False)(inputs)
+                  weights=[emb_matrix], trainable=False, name='embedding')(inputs)
 
     # GloveCNN
     gcnn_c1 = Conv1D(2, 300, activation='relu', padding='same')(e)
     gcnn_mp1 = MaxPooling1D()(gcnn_c1)
     gcnn_f1 = Flatten()(gcnn_mp1)
     gcnn_do1 = Dropout(0.5)(gcnn_f1)
-    #gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
-    gcnn_mp = MaxPooling1D()(gcnn_do1)
-    gcnn_ap = AveragePooling1D()(gcnn_do1)
-    gcnn_att = Attention(gcnn_do1)
+    gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
+    gcnn_mp = MaxPooling1D()(gcnn_d1)
+    gcnn_ap = AveragePooling1D()(gcnn_d1)
+    gcnn_att = Attention(gcnn_d1)
     gcnn_out = concatenate([gcnn_mp, gcnn_ap, gcnn_att])
 
     # GloveBiRNN
