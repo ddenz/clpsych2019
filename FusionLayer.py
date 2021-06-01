@@ -28,10 +28,7 @@ if __name__ == '__main__':
     # gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
     gcnn_mp2 = MaxPooling1D()(gcnn_do1)
     gcnn_ap = AveragePooling1D()(gcnn_do1)
-    gcnn_att = Attention(gcnn_do1)
-    print('mp2:', gcnn_mp2)
-    print('ap :', gcnn_ap)
-    print('att:', gcnn_att)
+    # gcnn_att = Attention(gcnn_do1)
     gcnn_out = Concatenate()([gcnn_mp2, gcnn_ap])
 
     # GloveBiRNN
@@ -42,8 +39,8 @@ if __name__ == '__main__':
     # grnn_d1 = Dense(4, activation='softmax')(grnn_do2)
     grnn_mp = MaxPooling1D()(grnn_do2)
     grnn_ap = AveragePooling1D()(grnn_do2)
-    grnn_att = Attention(grnn_do2)
-    grnn_out = Concatenate()([grnn_mp, grnn_ap, grnn_att])
+    # grnn_att = Attention(grnn_do2)
+    grnn_out = Concatenate()([grnn_mp, grnn_ap])
 
     # GloveGRU
     ggru_r1 = GRU(64, return_sequences=True)(e)
@@ -53,8 +50,8 @@ if __name__ == '__main__':
     # ggru_d1 = Dense(4, activation='softmax')(ggru_do2)
     ggru_mp = MaxPooling1D()(ggru_do2)
     ggru_ap = AveragePooling1D()(ggru_do2)
-    ggru_att = Attention(ggru_do2)
-    ggru_out = Concatenate()([ggru_mp, ggru_ap, ggru_att])
+    # ggru_att = Attention(ggru_do2)
+    ggru_out = Concatenate()([ggru_mp, ggru_ap])
 
     # GloveBiLSTM
     glstm_r1 = Bidirectional(LSTM(32, activation='sigmoid', recurrent_dropout=0.2, recurrent_activation='sigmoid',
@@ -66,7 +63,7 @@ if __name__ == '__main__':
     # glstm_d1 = Dense(4, activation='softmax')(glstm_do2)
     glstm_mp = MaxPooling1D()(glstm_do2)
     glstm_ap = AveragePooling1D()(glstm_do2)
-    glstm_att = Attention(glstm_do2)
-    glstm_out = Concatenate()([grnn_mp, grnn_ap, grnn_att])
+    # glstm_att = Attention(glstm_do2)
+    glstm_out = Concatenate()([grnn_mp, grnn_ap])
 
     x = Concatenate([])
