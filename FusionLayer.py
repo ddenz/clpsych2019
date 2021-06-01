@@ -29,6 +29,9 @@ if __name__ == '__main__':
     gcnn_mp2 = MaxPooling1D()(gcnn_do1)
     gcnn_ap = AveragePooling1D()(gcnn_do1)
     gcnn_att = Attention(gcnn_do1)
+    print('mp2:', gcnn_mp2)
+    print('ap :', gcnn_ap)
+    print('att:', gcnn_att)
     gcnn_out = concatenate([gcnn_mp2, gcnn_ap, gcnn_att])
 
     # GloveBiRNN
