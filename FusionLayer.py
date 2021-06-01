@@ -32,7 +32,7 @@ if __name__ == '__main__':
     print('mp2:', gcnn_mp2)
     print('ap :', gcnn_ap)
     print('att:', gcnn_att)
-    gcnn_out = Concatenate()([gcnn_mp2, gcnn_ap, gcnn_att])
+    gcnn_out = Concatenate()([gcnn_mp2, gcnn_ap])
 
     # GloveBiRNN
     grnn_r1 = Bidirectional(SimpleRNN(64, return_sequences=True))(e)
