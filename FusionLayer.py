@@ -1,7 +1,7 @@
 from keras.layers import Conv1D, Dense, Dropout, Embedding, Flatten, MaxPooling1D, AveragePooling1D, SimpleRNN, \
-    Bidirectional, GRU, LSTM
+    Bidirectional, GRU, LSTM, Concatenate
 from keras.models import Sequential
-from keras.layers import Input, concatenate
+from keras.layers import Input
 from tensorflow.keras.layers import Attention
 from utils import prepare_sequential, MAX_LENGTH
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     print('mp2:', gcnn_mp2)
     print('ap :', gcnn_ap)
     print('att:', gcnn_att)
-    gcnn_out = concatenate([gcnn_mp2, gcnn_ap, gcnn_att])
+    gcnn_out = Concatenate()([gcnn_mp2, gcnn_ap, gcnn_att])
 
     # GloveBiRNN
     grnn_r1 = Bidirectional(SimpleRNN(64, return_sequences=True))(e)
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     grnn_mp = MaxPooling1D()(grnn_do2)
     grnn_ap = AveragePooling1D()(grnn_do2)
     grnn_att = Attention(grnn_do2)
-    grnn_out = concatenate([grnn_mp, grnn_ap, grnn_att])
+    grnn_out = Concatenate()([grnn_mp, grnn_ap, grnn_att])
 
     # GloveGRU
     ggru_r1 = GRU(64, return_sequences=True)(e)
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     ggru_mp = MaxPooling1D()(ggru_do2)
     ggru_ap = AveragePooling1D()(ggru_do2)
     ggru_att = Attention(ggru_do2)
-    ggru_out = concatenate([ggru_mp, ggru_ap, ggru_att])
+    ggru_out = Concatenate()([ggru_mp, ggru_ap, ggru_att])
 
     # GloveBiLSTM
     glstm_r1 = Bidirectional(LSTM(32, activation='sigmoid', recurrent_dropout=0.2, recurrent_activation='sigmoid',
@@ -67,6 +67,6 @@ if __name__ == '__main__':
     glstm_mp = MaxPooling1D()(glstm_do2)
     glstm_ap = AveragePooling1D()(glstm_do2)
     glstm_att = Attention(glstm_do2)
-    glstm_out = concatenate([grnn_mp, grnn_ap, grnn_att])
+    glstm_out = Concatenate()([grnn_mp, grnn_ap, grnn_att])
 
-    x = concatenate([])
+    x = Concatenate([])
