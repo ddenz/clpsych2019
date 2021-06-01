@@ -26,10 +26,10 @@ if __name__ == '__main__':
     gcnn_f1 = Flatten()(gcnn_mp1)
     gcnn_do1 = Dropout(0.5)(gcnn_f1)
     # gcnn_d1 = Dense(4, activation='softmax')(gcnn_do1)
-    gcnn_mp = MaxPooling1D()(gcnn_do1)
+    gcnn_mp2 = MaxPooling1D()(gcnn_do1)
     gcnn_ap = AveragePooling1D()(gcnn_do1)
     gcnn_att = Attention(gcnn_do1)
-    gcnn_out = concatenate([gcnn_mp, gcnn_ap, gcnn_att])
+    gcnn_out = concatenate([gcnn_mp2, gcnn_ap, gcnn_att])
 
     # GloveBiRNN
     grnn_r1 = Bidirectional(SimpleRNN(64, return_sequences=True))(e)
