@@ -57,9 +57,10 @@ if __name__ == '__main__':
     model = keras.Model(inputs=inputs, outputs=outputs, name='fusion_model')
     model.summary()
 
+    print(y_train, type(y_train), type(y_train[0]))
     labels = list(np.unique(y_train))
-    w = class_weight.compute_class_weight('balanced', labels, y_train)
     print(labels, type(labels))
+    w = class_weight.compute_class_weight('balanced', labels, y_train)
     print(w, type(w))
     class_weights = dict(zip(labels, w))
     model.compile(loss=CategoricalCrossentropy(), optimizer=Adam(lr=10**-4), loss_weights=class_weights)
