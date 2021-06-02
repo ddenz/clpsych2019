@@ -58,5 +58,8 @@ if __name__ == '__main__':
     model.summary()
 
     labels = list(np.unique(y_train))
-    class_weights = dict(zip(labels, class_weight.compute_class_weight('balanced', labels, y_train)))
+    w = class_weight.compute_class_weight('balanced', labels, y_train)
+    print(labels, type(labels))
+    print(w, type(w))
+    class_weights = dict(zip(labels, w))
     model.compile(loss=CategoricalCrossentropy(), optimizer=Adam(lr=10**-4), loss_weights=class_weights)
