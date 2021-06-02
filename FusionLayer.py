@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # GloveBiRNN
     grnn_r1 = Bidirectional(SimpleRNN(64, return_sequences=True))(e)
     grnn_do1 = Dropout(0.5)(grnn_r1)
-    grnn_r2 = Bidirectional(SimpleRNN(64, return_sequences=False))(grnn_do1)
+    grnn_r2 = Bidirectional(SimpleRNN(64, return_sequences=True))(grnn_do1)
     # grnn_r2 = Bidirectional(SimpleRNN(64, return_sequences=False))(e)
     grnn_do2 = Dropout(0.5)(grnn_r2)
     # grnn_d1 = Dense(4, activation='softmax')(grnn_do2)
