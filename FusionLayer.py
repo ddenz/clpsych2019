@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # GloveGRU
     ggru_r1 = GRU(64, return_sequences=True)(e)
     ggru_do1 = Dropout(0.5)(ggru_r1)
-    ggru_r2 = GRU(64, return_sequences=False)(ggru_do1)
+    ggru_r2 = GRU(64, return_sequences=True)(ggru_do1)
     ggru_do2 = Dropout(0.5)(ggru_r2)
     # ggru_d1 = Dense(4, activation='softmax')(ggru_do2)
     ggru_mp = MaxPooling1D()(ggru_do2)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                   return_sequences=True))(e)
     glstm_do1 = Dropout(0.5)(glstm_r1)
     glstm_r2 = Bidirectional(LSTM(32, activation='sigmoid', recurrent_dropout=0.2, recurrent_activation='sigmoid',
-                                  return_sequences=False))(glstm_do1)
+                                  return_sequences=True))(glstm_do1)
     glstm_do2 = Dropout(0.5)(glstm_r2)
     # glstm_d1 = Dense(4, activation='softmax')(glstm_do2)
     glstm_mp = MaxPooling1D()(glstm_do2)
